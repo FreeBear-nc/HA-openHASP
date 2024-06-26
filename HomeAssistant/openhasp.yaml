@@ -128,6 +128,11 @@ plate01:
                 {% endif -%}
 
 ############ Weather & forecast #####################
+#
+# Note: The following integrations need to be installed and configured.
+#       OpenWeatherMap https://www.home-assistant.io/integrations/openweathermap
+#       Met.no https://www.home-assistant.io/integrations/met
+#
 
     - obj: "p1b14" # Icon
       properties:
