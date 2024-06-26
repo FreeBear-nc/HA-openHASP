@@ -1,0 +1,115 @@
+{"page":0,"comment":"---------- All pages ----------"}
+{"id":11,"obj":"btn","action":"prev","x":0,"y":0,"w":159,"h":39,"bg_color":"#34495E","text":"\uE141","text_color":"#000000","radius":0,"border_side":0,"text_font":32}
+{"id":12,"obj":"btn","action":"back","x":160,"y":0,"w":159,"h":39,"bg_color":"#34495E","text":"\uE2DC","text_color":"#000000","radius":0,"border_side":0,"text_font":24}
+{"id":13,"obj":"btn","action":"next","x":320,"y":0,"w":159,"h":39,"bg_color":"#34495E","text":"\uE142","text_color":"#000000","radius":0,"border_side":0,"text_font":32}
+{"id":0,"back":1}
+{"id":24,"obj":"label","x":90,"y":380,"h":90,"w":300,"text":"TI:ME","template":"%H:%M","align":"center","text_font":90,"bg_color":"#2C3E50","text_color":"#FFFFFF"}
+
+{"comment":" ----------- Light switches ------------"}
+{"id":2,"obj":"btn","x":0,"y":390,"w":90,"h":90,"toggle":true,"text":"\uE335","text_font":32,"mode":"break","align":1}
+{"id":3,"obj":"btn","x":390,"y":390,"w":90,"h":90,"toggle":true,"text":"\uE335","text_font":32,"mode":"break","align":1,"groupid":1}
+
+{"page":1,"comment":" ----------- Page 1 layout ------------"}
+{"comment":" ---------- Weather forecast-----------"}
+
+{"id":1,"obj":"btn","x":80,"y":45,"w":320,"h":30,"text":"WEATHER","text_font":16,"bg_color":"#2C3E50","text_color":"#FFFFFF","radius":0,"border_side":0,"click":0}
+{"id":2,"obj":"obj","x":80,"y":80,"w":320,"h":300,"click":0,"bg_color":"black"}
+
+{"id":14,"obj":"img","src":"L:/z-128-sunny.png","parentid":2,"auto_size":1,"w":128,"h":128,"x":0,"y":0}
+
+{"id":15,"obj":"label","x":130,"y":10,"w":180,"h":30,"align":"center","text":"date current","parentid":2,"text_font":24}
+{"id":16,"obj":"label","x":130,"y":45,"w":180,"h":40,"align":"center","text":"00.0°C","parentid":2,"text_font":32}
+{"id":17,"obj":"label","x":130,"y":90,"w":180,"h":30,"align":"center","text":"condition","parentid":2,"text_font":24}
+
+{"id":10,"obj":"tabview","x":0,"y":0,"w":320,"h":300,"parentid":2,"btn_pos":0,"bg_opa":0,"border_width":0}
+{"id":11,"obj":"tab","parentid":10}
+{"id":12,"obj":"tab","parentid":10}
+
+{"comment":" ----------- Current ------------"}
+
+{"id":21,"obj":"label","x":10,"y":140,"w":180,"h":32,"align":"left","text":"hour+2","parentid":11,"pad_top":3,"text_font":24,"click":0}
+{"id":22,"obj":"label","x":200,"y":140,"w":50,"h":32,"align":"center","text":"00.0","parentid":11,"pad_top":-2,"text_font":24,"click":0}
+{"id":23,"obj":"img","x":260,"y":140,"w":32,"h":32,"src":"L:/z-32-sunny.png","parentid":11,"click":0}
+
+{"id":31,"obj":"label","x":10,"y":175,"w":180,"h":32,"align":"left","text":"hour+3","parentid":11,"pad_top":3,"text_font":24,"click":0}
+{"id":32,"obj":"label","x":200,"y":175,"w":50,"h":32,"align":"center","text":"00.0","parentid":11,"pad_top":-2,"text_font":24,"click":0}
+{"id":33,"obj":"img","x":260,"y":175,"w":32,"h":32,"src":"L:/z-32-sunny.png","parentid":11,"click":0}
+
+{"id":41,"obj":"label","x":10,"y":210,"w":180,"h":32,"align":"left","text":"hour+4","parentid":11,"pad_top":3,"text_font":24,"click":0}
+{"id":42,"obj":"label","x":200,"y":210,"w":50,"h":32,"align":"center","text":"00.0","parentid":11,"pad_top":-2,"text_font":24,"click":0}
+{"id":43,"obj":"img","x":260,"y":210,"w":32,"h":32,"src":"L:/z-32-sunny.png","parentid":11,"click":0}
+
+{"id":51,"obj":"label","x":10,"y":245,"w":180,"h":32,"align":"left","text":"hour+5","parentid":11,"pad_top":3,"text_font":24,"click":0}
+{"id":52,"obj":"label","x":200,"y":245,"w":50,"h":32,"align":"center","text":"00.0","parentid":11,"pad_top":-2,"text_font":24,"click":0}
+{"id":53,"obj":"img","x":260,"y":245,"w":32,"h":32,"src":"L:/z-32-sunny.png","parentid":11,"click":0}
+
+{"comment":" ----------- Tomorrow ------------"}
+
+{"id":61,"obj":"label","x":10,"y":140,"w":145,"h":32,"align":"left","text":"date+1","parentid":12,"pad_top":3,"text_font":24,"click":0}
+{"id":62,"obj":"label","x":160,"y":140,"w":50,"h":32,"align":"center","text":"00.0","parentid":12,"pad_top":-2,"text_font":24,"text_color":"Cyan","click":0}
+{"id":63,"obj":"label","x":215,"y":140,"w":50,"h":32,"align":"center","text":"00.0","parentid":12,"pad_top":-2,"text_font":24,"text_color":"Gold","click":0}
+{"id":64,"obj":"img","x":270,"y":140,"w":32,"h":32,"src":"L:/z-32-sunny.png","parentid":12,"click":0}
+
+{"id":71,"obj":"label","x":10,"y":175,"w":145,"h":32,"align":"left","text":"date+2","parentid":12,"pad_top":3,"text_font":24,"click":0}
+{"id":72,"obj":"label","x":160,"y":175,"w":50,"h":32,"align":"center","text":"00.0","parentid":12,"pad_top":-2,"text_font":24,"text_color":"Cyan","click":0}
+{"id":73,"obj":"label","x":215,"y":175,"w":50,"h":32,"align":"center","text":"00.0","parentid":12,"pad_top":-2,"text_font":24,"text_color":"Gold","click":0}
+{"id":74,"obj":"img","x":270,"y":175,"w":32,"h":32,"src":"L:/z-32-sunny.png","parentid":12,"click":0}
+
+{"id":81,"obj":"label","x":10,"y":210,"w":145,"h":32,"align":"left","text":"date+3","parentid":12,"pad_top":3,"text_font":24,"click":0}
+{"id":82,"obj":"label","x":160,"y":210,"w":50,"h":32,"align":"center","text":"00.0","parentid":12,"pad_top":-2,"text_font":24,"text_color":"Cyan","click":0}
+{"id":83,"obj":"label","x":215,"y":210,"w":50,"h":32,"align":"center","text":"00.0","parentid":12,"pad_top":-2,"text_font":24,"text_color":"Gold","click":0}
+{"id":84,"obj":"img","x":270,"y":210,"w":32,"h":32,"src":"L:/z-32-sunny.png","parentid":12,"click":0}
+
+{"id":91,"obj":"label","x":10,"y":245,"w":145,"h":32,"align":"left","text":"date+4","parentid":12,"pad_top":3,"text_font":24,"click":0}
+{"id":92,"obj":"label","x":160,"y":245,"w":50,"h":32,"align":"center","text":"00.0","parentid":12,"pad_top":-2,"text_font":24,"text_color":"Cyan","click":0}
+{"id":93,"obj":"label","x":215,"y":245,"w":50,"h":32,"align":"center","text":"00.0","parentid":12,"pad_top":-2,"text_font":24,"text_color":"Gold","click":0}
+{"id":94,"obj":"img","x":270,"y":245,"w":32,"h":32,"src":"L:/z-32-sunny.png","parentid":12,"click":0}
+
+{"page":2,"comment":" ----------- Page 2 layout ------------"}
+{"comment":" ----------- Climate ------------"}
+{"id":10,"obj":"obj","x":40,"y":45,"w":400,"h":340,"bg_color":"black","click":0}
+{"id":20,"obj":"arc","x":90,"y":52,"w":300,"h":300,"min":160,"max":200,"val":180,"border_side":0,"type":0,"rotation":0,"start_angle":135,"end_angle":45,"start_angle1":135,"end_angle1":45,"adjustable":"true","line_width":21,"line_width1":21,"line_color1":"#9f96b0","bg_opa":0}
+{"id":21,"obj":"gauge","x":25,"y":25,"w":250,"h":250,"parentid":20,"min":160,"max":210,"val":180,"format":1,"critical_value":250,"label_count":6,"line_count":31,"border_width":0,"pad_top":2,"pad_bottom":2,"pad_left":2,"pad_right":2,"value_str":"°C","value_ofs_y":45,"value_font":16,"bg_opa":0}
+{"id":22,"obj":"obj","x":120,"y":120,"w":60,"h":60,"parentid":20,"click":0,"radius":30,"border_width":2,"border_opa":200}
+{"id":23,"obj":"label","x":0,"y":135,"w":300,"h":30,"parentid":20,"text":"18.4","text_font":24,"align":"center"}
+
+{"id":24,"obj":"obj","x":360,"y":335,"w":60,"h":30,"click":0}
+{"id":25,"obj":"label","x":360,"y":335,"w":60,"h":30,"text":"00.0","text_font":24,"align":"center"}
+{"id":30,"obj":"tabview","x":35,"y":325,"w":250,"h":80,"btn_pos":0,"bg_opa":0,"border_width":0,"radius":0}
+
+{"id":31,"obj":"tab","parentid":30}
+{"id":32,"obj":"tab","parentid":30}
+{"id":33,"obj":"tab","parentid":30}
+{"id":41,"obj":"switch","x":35,"y":10,"w":100,"h":35,"parentid":31,"radius":25,"radius2":25}
+{"id":42,"obj":"dropdown","x":15,"y":0,"w":110,"h":50,"parentid":32,"options":"mode","text_font":24,"direction":"1"}
+{"id":43,"obj":"dropdown","x":15,"y":10,"w":115,"h":30,"parentid":33,"options":"fan_modes","text_font":24,"direction":"1"}
+
+{"page":3,"comment":" ----------- Page 3 layout ------------"}
+{"comment":" -Work in progress to display energy plots -"}
+{"id":2,"obj":"img","x":0,"y":40,"w":480,"h":340,"click":0,"bg_color":"black"}
+
+{"page":4,"comment":" ----------- Page 4 layout ------------"}
+{"comment":" ---------- EV Charge -----------"}
+{"id":10,"obj":"obj","x":40,"y":45,"w":400,"h":340,"bg_color":"black","click":0}
+
+{"id":12,"obj":"btn","x":0,"y":0,"w":120,"h":100,"parentid":10,"toggle":false,"text":"Approve","text_font":32,"mode":"break","align":"center"}
+{"id":13,"obj":"btn","x":0,"y":110,"w":120,"h":100,"parentid":10,"toggle":true,"text":"Max Charge","text_font":32,"mode":"break","align":"center"}
+{"id":14,"obj":"btn","x":0,"y":220,"w":120,"h":100,"parentid":10,"toggle":true,"text":"Pause","text_font":32,"mode":"break","align":"center"}
+
+{"id":15,"obj":"label","x":130,"y":20,"w":260,"h":50,"align":"center","text":"EV Charging stats","parentid":10,"text_font":35,"text_color":"Gold","click":0}
+
+{"id":16,"obj":"label","x":130,"y":80,"w":125,"h":40,"align":"right","text":"Total kWh","parentid":10,"text_font":32,"click":0}
+{"id":17,"obj":"label","x":260,"y":80,"w":130,"h":40,"align":"right","text":"123456.0","parentid":10,"text_font":32,"click":0}
+
+{"id":18,"obj":"label","x":130,"y":130,"w":160,"h":40,"align":"right","text":"Session kWh","parentid":10,"text_font":32,"click":0}
+{"id":19,"obj":"label","x":290,"y":130,"w":100,"h":40,"align":"right","text":"123.0","parentid":10,"text_font":32,"click":0}
+
+{"id":20,"obj":"label","x":130,"y":180,"w":160,"h":40,"align":"right","text":"Charging W","parentid":10,"text_font":32,"click":0}
+{"id":21,"obj":"label","x":290,"y":180,"w":100,"h":40,"align":"right","text":"12.0","parentid":10,"text_font":32,"click":0}
+
+{"id":26,"obj":"label","x":130,"y":230,"w":260,"h":40,"align":"center","text":"Battery %","parentid":10,"text_font":32,"click":0}
+{"id":27,"obj":"bar","x":130,"y":280,"w":260,"h":40,"parentid":10,"min":0,"max":100}
+
+
+{"comment":" ----------- Page n layout ------------"}
+{"comment":" ----------- Page n layout ------------"}

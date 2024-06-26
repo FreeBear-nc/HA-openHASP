@@ -1,0 +1,441 @@
+
+plate01:
+  objects:
+    - obj: "p0b12"  # temperature label on all pages
+      properties:
+        "text": "{{ states('sensor.hallway_temperature') if not (is_state('sensor.hallway_temperature','unavailable')) }}°C"
+
+    - obj: "p0b2" # switch, checkbox or btn with toggle true
+      properties:
+        "val": '{{ 1 if is_state("switch.landing", "on") else 0 }}'
+        "text": '{{ "\uE6E8" if is_state("switch.landing", "on") else "\uE335" | e }}'
+      event:
+        "down":
+          - service: homeassistant.toggle
+            entity_id: "switch.landing"
+
+    - obj: "p0b3" # NOTE: When deployed, switch.hallway, not switch.hasp_hallway !
+      properties:
+        "val": '{{ 1 if is_state("switch.hasp_hallway", "on") else 0 }}'
+        "text": '{{ "\uE6E8" if is_state("switch.hasp_hallway", "on") else "\uE335" | e }}'
+      event:
+        "up":
+          - service: homeassistant.toggle
+            entity_id: "switch.hasp_hallway"
+
+########## Climate/thermostat on Page 2 #############
+
+    - obj: "p2b20"  # arc slider
+      properties:
+        "val": "{{ state_attr('climate.central_heating','temperature') * 10 | int if not (is_state('climate.central_heating','unavailable')) }}"
+        "min": "150"
+        "max": "200"
+        "line_color1": >
+          {% if is_state('climate.central_heating', 'cool') %}
+          {{ "#346beb" }}
+          {%-elif is_state('climate.central_heating', 'heat_cool') %}
+          {{ "#34bdeb" }}
+          {%-elif is_state('climate.central_heating', 'heat') %}
+          {{ "#eb3434" }}
+          {%-elif is_state('climate.central_heating', 'dry') %}
+          {{ "#ebeb34" }}
+          {%-elif is_state('climate.central_heating', 'fan_only') %}
+          {{ "#34eb77" }}
+          {%-else %}
+          {{ "#9f96b0" }}
+          {% endif %}
+      event:
+        "changed":
+          - service: climate.set_temperature
+            target:
+              entity_id: climate.central_heating
+            data:
+              temperature: "{{ val | int / 10 }}"
+        "up":
+          - service: climate.set_temperature
+            target:
+              entity_id: climate.central_heating
+            data:
+              temperature: "{{ val | int / 10 }}"
+
+    - obj: "p2b21"  # gauge current temp
+      properties:
+        "val": "{{ state_attr('climate.central_heating','current_temperature') * 10 | int if not (is_state('climate.central_heating','unavailable')) }}"
+        "min": "150"
+        "max": "200"
+        "critical_value": "201"
+        "label_count": "6"
+        "line_count": "31"
+
+    - obj: "p2b23"  # label current temp (and +/- with short/long touch)
+      properties:
+        "text": "{{ state_attr('climate.central_heating','current_temperature') if not (is_state('climate.central_heating','unavailable')) }}"
+      event:
+        "up":
+          - service: climate.set_temperature
+            target:
+              entity_id: climate.central_heating
+            data:
+              temperature: "{{ state_attr('climate.central_heating','temperature') + state_attr('climate.central_heating','target_temp_step') | float}}" 
+        "long":
+          - service: climate.set_temperature
+            target:
+              entity_id: climate.central_heating
+            data:
+              temperature: "{{ state_attr('climate.central_heating','temperature') - state_attr('climate.central_heating','target_temp_step') | float}}" 
+
+
+    - obj: "p2b25"  # label target temp
+      properties:
+        "text": "{{ state_attr('climate.central_heating','temperature') if not (is_state('climate.central_heating','unavailable')) }}"
+
+
+    - obj: "p2b41"  # on/off switch
+      properties:
+        "val": '{{ 1 if is_state("switch.boiler_central_heating_enabled", "on") else 0 }}'
+      event:
+        "down":
+          - service: homeassistant.toggle
+            entity_id: "switch.boiler_central_heating_enabled"
+
+    - obj: "p2b42"  # dropdown with hvac_modes
+      properties:
+        "options": >
+          {% if not (is_state('climate.central_heating','unavailable')) %}{%for mode in state_attr('climate.central_heating','hvac_modes')%}
+          {%- if mode == 'off' -%}
+          Off{{"\n"|e}}
+          {%- elif mode == 'heat' -%}
+          Heating{{"\n"|e}}
+          {%- else -%}
+          On{{"\n"|e}}
+          {%- endif -%}
+          {%-if not loop.last%}{%-endif%}{%-endfor%}{% endif %}
+        "val": >
+          {% if not (is_state('climate.central_heating','unavailable')) %}{%for mode in state_attr('climate.central_heating','hvac_modes')%}
+          {{loop.index -1 if mode == states('climate.central_heating') }}
+          {%-endfor%}{% endif %}
+      event:
+        "changed":
+          - service: climate.set_hvac_mode
+            target:
+              entity_id: climate.central_heating
+            data:
+              hvac_mode: >
+                {% if text == "Off" -%}
+                off
+                {% elif text == 'Heating' -%}
+                heat
+                {% endif -%}
+
+############ Weather & forecast #####################
+
+    - obj: "p1b14" # Icon
+      properties:
+        "src": "{{ 'L:/z-128-' + states('weather.openweathermap') + '.png' if not is_state('weather.openweathermap','unavailable') }}"
+
+    - obj: "p1b15" # Current date (adjust format to your needs)
+      properties:
+        "text": "{{ (now().strftime('%a %d %b')) }}"
+
+    - obj: "p1b16" # Current temp (you can use your own outdoor temp sensor if you have one)
+      properties:
+        "text": "{{ states('sensor.outdoor_temperature') if not is_state('sensor.outdoor_temperature','unavailable') else '--' }}°C"
+
+    - obj: "p1b17" # Current weather condition
+      properties:
+        "text": >
+           {% if is_state('weather.openweathermap','clear-night') -%}
+           Clear night
+           {% elif is_state('weather.openweathermap','cloudy') -%}
+           Cloudy
+           {% elif is_state('weather.openweathermap','fog') -%}
+           Fog
+           {% elif is_state('weather.openweathermap','hail') -%}
+           Hail
+           {% elif is_state('weather.openweathermap','lightning') -%}
+           Lightning
+           {% elif is_state('weather.openweathermap','lightning-rainy') -%}
+           Thunderstorms
+           {% elif is_state('weather.openweathermap','partlycloudy') -%}
+           Partly cloudy
+           {% elif is_state('weather.openweathermap','pouring') -%}
+           Pouring rain
+           {% elif is_state('weather.openweathermap','rainy') -%}
+           Rainy
+           {% elif is_state('weather.openweathermap','snowy') -%}
+           Snowy
+           {% elif is_state('weather.openweathermap','snowy-rainy') -%}
+           Snowy-rainy
+           {% elif is_state('weather.openweathermap','sunny') -%}
+           Sunny
+           {% elif is_state('weather.openweathermap','windy') -%}
+           Windy
+           {% elif is_state('weather.openweathermap','windy-variant') -%}
+           Windy
+           {% elif is_state('weather.openweathermap','exceptional') -%}
+           Exceptional
+           {% elif is_state('weather.openweathermap','unavailable') -%}
+           (not available)
+           {% else -%}
+           {{ states('weather.openweathermap') }}
+           {% endif -%}
+
+    - obj: "p1b21" # Forecast time +1h
+      properties:
+        "text": >
+          {%- if not is_state('weather.openweathermap','unavailable') %}
+          {%- set update = states('sensor.date') %}
+          {%- set midnight = now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp() %}
+          {%- set event = as_timestamp(strptime(state_attr('weather.openweathermap','forecast')[1]['datetime'], '%Y-%m-%dT%H:%M:%S%z', default='2020-01-01T00:00:00+00:00')) %}
+          {%- set delta = ((event - midnight) // 86400) | int %}
+          {%- if delta == 0 %}
+          Today
+          {%- elif delta == 1 %}
+          Tomorrow
+          {%- endif %}
+          {{ event | timestamp_custom(" %-I %p") }}
+          {%- endif %}
+
+    - obj: "p1b22" # Forecast temp +1h
+      properties:
+        "text": "{{ state_attr('weather.openweathermap','forecast')[1]['temperature'] if not is_state('weather.openweathermap','unavailable') else '-' }}"
+
+    - obj: "p1b23" # Forecast condition +1h
+      properties:
+        "src": >
+          {%- if not is_state('weather.openweathermap','unavailable') %}
+          L:/z-32-{{ state_attr('weather.openweathermap','forecast')[1]['condition'] }}.png
+          {%- endif %}
+
+    - obj: "p1b31" # Forecast time +2h
+      properties:
+        "text": >
+          {%- if not is_state('weather.openweathermap','unavailable') %}
+          {%- set update = states('sensor.date') %}
+          {%- set midnight = now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp() %}
+          {%- set event = as_timestamp(strptime(state_attr('weather.openweathermap','forecast')[2]['datetime'], '%Y-%m-%dT%H:%M:%S%z', default='2020-01-01T00:00:00+00:00')) %}
+          {%- set delta = ((event - midnight) // 86400) | int %}
+          {%- if delta == 0 %}
+          Today
+          {%- elif delta == 1 %}
+          Tomorrow
+          {%- endif %}
+          {{ event | timestamp_custom(" %-I %p") }}
+          {%- endif %}
+
+    - obj: "p1b32" # Forecast temp +2h
+      properties:
+        "text": "{{ state_attr('weather.openweathermap','forecast')[2]['temperature'] if not is_state('weather.openweathermap','unavailable') else '-' }}"
+
+    - obj: "p1b33" # Forecast condition +2h
+      properties:
+        "src": >
+          {%- if not is_state('weather.openweathermap','unavailable') %}
+          L:/z-32-{{ state_attr('weather.openweathermap','forecast')[2]['condition'] }}.png
+          {%- endif %}
+
+    - obj: "p1b41" # Forecast time +4h
+      properties:
+        "text": >
+          {%- if not is_state('weather.openweathermap','unavailable') %}
+          {%- set update = states('sensor.date') %}
+          {%- set midnight = now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp() %}
+          {%- set event = as_timestamp(strptime(state_attr('weather.openweathermap','forecast')[3]['datetime'], '%Y-%m-%dT%H:%M:%S%z', default='2020-01-01T00:00:00+00:00')) %}
+          {%- set delta = ((event - midnight) // 86400) | int %}
+          {%- if delta == 0 %}
+          Today
+          {%- elif delta == 1 %}
+          Tomorrow
+          {%- endif %}
+          {{ event | timestamp_custom(" %-I %p") }}
+          {%- endif %}
+
+    - obj: "p1b42" # Forecast temp +4h
+      properties:
+        "text": "{{ state_attr('weather.openweathermap','forecast')[3]['temperature'] if not is_state('weather.openweathermap','unavailable') else '-' }}"
+
+    - obj: "p1b43" # Forecast condition +4h
+      properties:
+        "src": >
+          {%- if not is_state('weather.openweathermap','unavailable') %}
+          L:/z-32-{{ state_attr('weather.openweathermap','forecast')[3]['condition'] }}.png
+          {%- endif %}
+
+    - obj: "p1b51" # Forecast time +8h
+      properties:
+        "text": >
+          {%- if not is_state('weather.openweathermap','unavailable') %}
+          {%- set update = states('sensor.date') %}
+          {%- set midnight = now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp() %}
+          {%- set event = as_timestamp(strptime(state_attr('weather.openweathermap','forecast')[4]['datetime'], '%Y-%m-%dT%H:%M:%S%z', default='2020-01-01T00:00:00+00:00')) %}
+          {%- set delta = ((event - midnight) // 86400) | int %}
+          {%- if delta == 0 %}
+          Today
+          {%- elif delta == 1 %}
+          Tomorrow
+          {%- endif %}
+          {{ event | timestamp_custom(" %-I %p") }}
+          {%- endif %}
+
+    - obj: "p1b52" # Forecast temp +8h
+      properties:
+        "text": "{{ state_attr('weather.openweathermap','forecast')[4]['temperature'] if not is_state('weather.openweathermap','unavailable') else '-' }}"
+
+    - obj: "p1b53" # Forecast condition +8h
+      properties:
+        "src": >
+          {%- if not is_state('weather.openweathermap','unavailable') %}
+          L:/z-32-{{ state_attr('weather.openweathermap','forecast')[4]['condition'] }}.png
+          {%- endif %}
+
+    - obj: "p1b61" # Forecast date +1d
+      properties:
+        "text": >
+          {%- if not is_state('weather.forecast_home','unavailable') %}
+          {%- set now1 = as_timestamp(strptime(state_attr('weather.forecast_home','forecast')[1]['datetime'], '%Y-%m-%dT%H:%M:%S%z', default='2020-01-01T00:00:00+00:00')) %}
+          {%- set day = now1 | timestamp_custom("%w") %}
+          {%- set days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] %}
+          {{ days[ day | int -1 ] }}{{ now1 | timestamp_custom(" %d") }}
+          {%- endif %}
+
+    - obj: "p1b62" # Forecast temp min +1d
+      properties:
+        "text": "{{ state_attr('weather.forecast_home','forecast')[1]['templow'] if not is_state('weather.forecast_home','unavailable') else '-' }}"
+
+    - obj: "p1b63" # Forecast temp max +1d
+      properties:
+        "text": "{{ state_attr('weather.forecast_home','forecast')[1]['temperature'] if not is_state('weather.forecast_home','unavailable') else '-' }}"
+
+    - obj: "p1b64" # Forecast condition +1d
+      properties:
+        "src": >
+          {%- if not is_state('weather.forecast_home','unavailable') %}
+          L:/z-32-{{ state_attr('weather.forecast_home','forecast')[1]['condition'] }}.png
+          {%- endif %}
+
+    - obj: "p1b71" # Forecast date +2d
+      properties:
+        "text": >
+          {%- if not is_state('weather.forecast_home','unavailable') %}
+          {%- set now1 = as_timestamp(strptime(state_attr('weather.forecast_home','forecast')[2]['datetime'], '%Y-%m-%dT%H:%M:%S%z', default='2020-01-01T00:00:00+00:00')) %}
+          {%- set day = now1 | timestamp_custom("%w") %}
+          {%- set days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] %}
+          {{ days[ day | int -1 ] }}{{ now1 | timestamp_custom(" %d") }}
+          {%- endif %}
+
+    - obj: "p1b72" # Forecast temp min +2d
+      properties:
+        "text": "{{ state_attr('weather.forecast_home','forecast')[2]['templow'] if not is_state('weather.forecast_home','unavailable') else '-' }}"
+
+    - obj: "p1b73" # Forecast temp max +2d
+      properties:
+        "text": "{{ state_attr('weather.forecast_home','forecast')[2]['temperature'] if not is_state('weather.forecast_home','unavailable') else '-' }}"
+
+    - obj: "p1b74" # Forecast condition +2d
+      properties:
+        "src": >
+          {%- if not is_state('weather.forecast_home','unavailable') %}
+          L:/z-32-{{ state_attr('weather.forecast_home','forecast')[2]['condition'] }}.png
+          {%- endif %}
+
+    - obj: "p1b81" # Forecast date +3d
+      properties:
+        "text": >
+          {%- if not is_state('weather.forecast_home','unavailable') %}
+          {%- set now1 = as_timestamp(strptime(state_attr('weather.forecast_home','forecast')[3]['datetime'], '%Y-%m-%dT%H:%M:%S%z', default='2020-01-01T00:00:00+00:00')) %}
+          {%- set day = now1 | timestamp_custom("%w") %}
+          {%- set days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] %}
+          {{ days[ day | int -1 ] }}{{ now1 | timestamp_custom(" %d") }}
+          {%- endif %}
+
+    - obj: "p1b82" # Forecast temp min +3d
+      properties:
+        "text": "{{ state_attr('weather.forecast_home','forecast')[3]['templow'] if not is_state('weather.forecast_home','unavailable') else '-' }}"
+
+    - obj: "p1b83" # Forecast temp max +3d
+      properties:
+        "text": "{{ state_attr('weather.forecast_home','forecast')[3]['temperature'] if not is_state('weather.forecast_home','unavailable') else '-' }}"
+
+    - obj: "p1b84" # Forecast condition +3d
+      properties:
+        "src": >
+          {%- if not is_state('weather.forecast_home','unavailable') %}
+          L:/z-32-{{ state_attr('weather.forecast_home','forecast')[3]['condition'] }}.png
+          {%- endif %}
+
+    - obj: "p1b91" # Forecast date +4d
+      properties:
+        "text": >
+          {%- if not is_state('weather.forecast_home','unavailable') %}
+          {%- set now1 = as_timestamp(strptime(state_attr('weather.forecast_home','forecast')[4]['datetime'], '%Y-%m-%dT%H:%M:%S%z', default='2020-01-01T00:00:00+00:00')) %}
+          {%- set day = now1 | timestamp_custom("%w") %}
+          {%- set days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] %}
+          {{ days[ day | int -1 ] }}{{ now1 | timestamp_custom(" %d") }}
+          {%- endif %}
+
+    - obj: "p1b92" # Forecast temp min +4d
+      properties:
+        "text": "{{ state_attr('weather.forecast_home','forecast')[4]['templow'] if not is_state('weather.forecast_home','unavailable') else '-' }}"
+
+    - obj: "p1b93" # Forecast temp max +4d
+      properties:
+        "text": "{{ state_attr('weather.forecast_home','forecast')[4]['temperature'] if not is_state('weather.forecast_home','unavailable') else '-' }}"
+
+    - obj: "p1b94" # Forecast condition +4d
+      properties:
+        "src": >
+          {%- if not is_state('weather.forecast_home','None') and not is_state('weather.forecast_home','unavailable') %}
+          L:/z-32-{{ state_attr('weather.forecast_home','forecast')[4]['condition'] }}.png
+          {%- endif %}
+
+########## EV Charging on Page 4 #############
+
+    - obj: "p4b17"
+      properties:
+        "text": "{{ states('sensor.ohme_accumulative_energy') if not (is_state('sensor.ohme_accumulative_energy','----')) }}"
+
+    - obj: "p4b19"
+      properties: ## Session kWh
+        "text": "{{ states('sensor.ohme_session_energy') if not (is_state('sensor.ohme_session_energy','----')) }}"
+    - obj: "p4b21"
+      properties: ## Charging kW
+        "text": "{{ states('sensor.ohme_power_draw') if not (is_state('sensor.ohme_power_draw','----')) }}"
+    - obj: "p4b23"
+      properties: ## Voltage
+        "text": "{{ states('sensor.ohme_voltage') if not (is_state('sensor.ohme_voltage','----')) }}"
+
+    - obj: "p4b25"
+      properties: ## Current
+        "text": "{{ states('sensor.ohme_current_draw') if not (is_state('sensor.ohme_current_draw','----')) }}"
+
+    - obj: "p4b27"
+      properties: ## Battery state of charge
+        "val": "{{ states('sensor.ohme_battery_soc') | int if not (is_state('sensor.ohme_battery_soc','----')) }}"
+
+
+    - obj: "p4b12" # Approve charge
+      properties:
+        "text": '{{ "Charging" if is_state("binary_sensor.ohme_car_charging", "true") else "Approve" | e }}'
+      event:
+        "down":
+          - service: input_button.press
+            entity_id: "button.ohme_approve_charge"
+
+    - obj: "p4b13" # Maximum charge rate
+      properties:
+        "val": '{{ 1 if is_state("switch.ohme_max_charge", "on") else 0 }}'
+        "text": '{{ "Max" if is_state("switch.ohme_max_charge", "on") else "Max Charge" | e }}'
+      event:
+        "down":
+          - service: homeassistant.toggle
+            entity_id: "switch.ohme_max_charge"
+
+    - obj: "p4b14" # Pause charging
+      properties:
+        "val": '{{ 1 if is_state("switch.ohme_pause_charge", "on") else 0 }}'
+        "text": '{{ "Paused" if is_state("switch.ohme_pause_charge", "on") else "Pause" | e }}'
+      event:
+        "down":
+          - service: homeassistant.toggle
+            entity_id: "switch.ohme_pause_charge"
+
