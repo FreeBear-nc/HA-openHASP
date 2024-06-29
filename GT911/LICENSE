@@ -1,0 +1,5 @@
+
+Goodix sources from https://github.com/nik-sharky/arduino-goodix - Appears to be MIT licence.
+
+hexdump.h from https://github.com/lnlp/Hexdump - MIT licence.
+Note: hexdump.h has been modified from the original.
