@@ -90,25 +90,25 @@
 
 {"page":4,"comment":" ----------- Page 4 layout ------------"}
 {"comment":" ---------- EV Charge -----------"}
-{"id":10,"obj":"obj","x":40,"y":45,"w":400,"h":340,"bg_color":"black","click":0}
+{"id":10,"obj":"obj","x":10,"y":45,"w":460,"h":340,"bg_color":"black","click":0}
 
-{"id":12,"obj":"btn","x":0,"y":0,"w":120,"h":100,"parentid":10,"toggle":false,"text":"Approve","text_font":32,"mode":"break","align":"center"}
-{"id":13,"obj":"btn","x":0,"y":110,"w":120,"h":100,"parentid":10,"toggle":true,"text":"Max Charge","text_font":32,"mode":"break","align":"center"}
-{"id":14,"obj":"btn","x":0,"y":220,"w":120,"h":100,"parentid":10,"toggle":true,"text":"Pause","text_font":32,"mode":"break","align":"center"}
+{"id":12,"obj":"btn","x":0,"y":0,"w":120,"h":100,"parentid":10,"toggle":false,"text":"Approve","text_font":32,"mode":"break","align":"center","bg_main_stop":255}
+{"id":13,"obj":"btn","x":0,"y":110,"w":120,"h":100,"parentid":10,"toggle":true,"text":"Max Charge","text_font":32,"mode":"break","align":"center","bg_main_stop":255}
+{"id":14,"obj":"btn","x":0,"y":220,"w":120,"h":100,"parentid":10,"toggle":true,"text":"Pause","text_font":32,"mode":"break","align":"center","bg_main_stop":255}
 
-{"id":15,"obj":"label","x":130,"y":20,"w":260,"h":50,"align":"center","text":"EV Charging stats","parentid":10,"text_font":35,"text_color":"Gold","click":0}
+{"id":15,"obj":"label","x":130,"y":20,"w":320,"h":50,"align":"center","text":"EV Charging stats","parentid":10,"text_font":35,"text_color":"Gold","click":0}
 
-{"id":16,"obj":"label","x":130,"y":80,"w":125,"h":40,"align":"right","text":"Total kWh","parentid":10,"text_font":32,"click":0}
-{"id":17,"obj":"label","x":260,"y":80,"w":130,"h":40,"align":"right","text":"123456.0","parentid":10,"text_font":32,"click":0}
+{"id":16,"obj":"label","x":130,"y":80,"w":125,"h":40,"align":"left","text":"    Total:","parentid":10,"text_font":32,"click":0}
+{"id":17,"obj":"label","x":260,"y":80,"w":190,"h":40,"align":"right","text":"123456.0","parentid":10,"text_font":32,"click":0}
 
-{"id":18,"obj":"label","x":130,"y":130,"w":160,"h":40,"align":"right","text":"Session kWh","parentid":10,"text_font":32,"click":0}
-{"id":19,"obj":"label","x":290,"y":130,"w":100,"h":40,"align":"right","text":"123.0","parentid":10,"text_font":32,"click":0}
+{"id":18,"obj":"label","x":130,"y":130,"w":125,"h":40,"align":"left","text":" Session:","parentid":10,"text_font":32,"click":0}
+{"id":19,"obj":"label","x":260,"y":130,"w":190,"h":40,"align":"right","text":"123.0","parentid":10,"text_font":32,"click":0}
 
-{"id":20,"obj":"label","x":130,"y":180,"w":160,"h":40,"align":"right","text":"Charging W","parentid":10,"text_font":32,"click":0}
-{"id":21,"obj":"label","x":290,"y":180,"w":100,"h":40,"align":"right","text":"12.0","parentid":10,"text_font":32,"click":0}
+{"id":20,"obj":"label","x":130,"y":180,"w":125,"h":40,"align":"left","text":"Charging:","parentid":10,"text_font":32,"click":0}
+{"id":21,"obj":"label","x":260,"y":180,"w":165,"h":40,"align":"right","text":"12.0","parentid":10,"text_font":32,"click":0}
 
-{"id":26,"obj":"label","x":130,"y":230,"w":260,"h":40,"align":"center","text":"Battery %","parentid":10,"text_font":32,"click":0}
-{"id":27,"obj":"bar","x":130,"y":280,"w":260,"h":40,"parentid":10,"min":0,"max":100}
+{"id":26,"obj":"label","x":130,"y":230,"w":320,"h":40,"align":"center","text":"Battery %","parentid":10,"text_font":32,"click":0}
+{"id":27,"obj":"bar","x":130,"y":280,"w":320,"h":40,"parentid":10,"min":0,"max":100}
 
 
 {"comment":" ----------- Page n layout ------------"}

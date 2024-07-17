@@ -91,6 +91,7 @@ plate01:
 
 
     - obj: "p2b41"  # on/off switch
+## switch.boiler_central_heating_enabled
       properties:
         "val": '{{ 1 if is_state("switch.boiler_central_heating_enabled", "on") else 0 }}'
       event:
@@ -128,11 +129,7 @@ plate01:
                 {% endif -%}
 
 ############ Weather & forecast #####################
-#
-# Note: The following integrations need to be installed and configured.
-#       OpenWeatherMap https://www.home-assistant.io/integrations/openweathermap
-#       Met.no https://www.home-assistant.io/integrations/met
-#
+
 
     - obj: "p1b14" # Icon
       properties:
@@ -184,6 +181,21 @@ plate01:
            {% else -%}
            {{ states('weather.openweathermap') }}
            {% endif -%}
+
+#    - obj: "p1b10"  # tab dots - MAKE SURE YOU UPDATE THIS ONE!!
+#        event:
+#        "changed":
+#          - service: openhasp.command
+#            target:
+#              entity_id: openhasp.plate01
+#            data:
+#              keyword: p1b19.text
+#              parameters: >
+#                {% if val == 0 %}
+#                {{ "#000000 \u2022# #909090 \u2022#" | e }}
+#                {%-elif val == 1 %}
+#                {{ "#909090 \u2022# #000000 \u2022#" | e }}
+#                {% endif %}
 
     - obj: "p1b21" # Forecast time +1h
       properties:
@@ -397,21 +409,27 @@ plate01:
 
     - obj: "p4b17"
       properties:
-        "text": "{{ states('sensor.ohme_accumulative_energy') if not (is_state('sensor.ohme_accumulative_energy','----')) }}"
+        "text": "{{ states('sensor.ohme_accumulative_energy') | round(2) | float if not (is_state('sensor.ohme_accumulative_energy','----')) }} kWh"
 
     - obj: "p4b19"
       properties: ## Session kWh
-        "text": "{{ states('sensor.ohme_session_energy') if not (is_state('sensor.ohme_session_energy','----')) }}"
-    - obj: "p4b21"
-      properties: ## Charging kW
-        "text": "{{ states('sensor.ohme_power_draw') if not (is_state('sensor.ohme_power_draw','----')) }}"
-    - obj: "p4b23"
-      properties: ## Voltage
-        "text": "{{ states('sensor.ohme_voltage') if not (is_state('sensor.ohme_voltage','----')) }}"
+        "text": "{{ states('sensor.ohme_session_energy') | round(2) | float if not (is_state('sensor.ohme_session_energy','----')) }} kWh"
 
-    - obj: "p4b25"
-      properties: ## Current
-        "text": "{{ states('sensor.ohme_current_draw') if not (is_state('sensor.ohme_current_draw','----')) }}"
+    - obj: "p4b21"
+      properties: ## Charging W
+        "text": "{{ states('sensor.ohme_power_draw') | int if not (is_state('sensor.ohme_power_draw','----')) }} W"
+
+#    - obj: "p4b23"
+#      properties: ## Voltage
+#        "text": "{{ states('sensor.ohme_voltage') if not (is_state('sensor.ohme_voltage','----')) }}"
+
+#    - obj: "p4b25"
+#      properties: ## Current
+#        "text": "{{ states('sensor.ohme_current_draw') if not (is_state('sensor.ohme_current_draw','----')) }}"
+
+    - obj: "p4b26"
+      properties: ## battery %%
+        "text": "battery {{ states('sensor.ohme_battery_soc') | int if not (is_state('sensor.ohme_battery_soc','----')) }}%"
 
     - obj: "p4b27"
       properties: ## Battery state of charge
@@ -420,7 +438,8 @@ plate01:
 
     - obj: "p4b12" # Approve charge
       properties:
-        "text": '{{ "Charging" if is_state("binary_sensor.ohme_car_charging", "true") else "Approve" | e }}'
+        "text": '{{ "Approve" if is_state("binary_sensor.ohme_pending_approval", "true") else "Ready" | e }}'
+        "bg_color": '{% if is_state("binary_sensor.ohme_pending_approval"), "true" %}gold{% elif is_state(binary_sensor.ohme_car_charging), "true" %}red{% elif is_state(binary_sensor.ohme_slot_active), "true" %}green{% else %}cyan{% endif %}'
       event:
         "down":
           - service: input_button.press
@@ -429,6 +448,7 @@ plate01:
     - obj: "p4b13" # Maximum charge rate
       properties:
         "val": '{{ 1 if is_state("switch.ohme_max_charge", "on") else 0 }}'
+        "bg_color": '{{"red" if is_state("binary_sensor.ohme_max_charge", "true") else "cyan" }}'
         "text": '{{ "Max" if is_state("switch.ohme_max_charge", "on") else "Max Charge" | e }}'
       event:
         "down":
